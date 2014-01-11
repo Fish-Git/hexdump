@@ -57,8 +57,8 @@ int main( int argc, char* argv[] )
     else
         hexdumpa32( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
 
-    printf("%s",buf);
-    free( buf );
+    printf("%s",buf?buf:"(hexdump error)");
+    free( buf ); buf = NULL;
 
     return 0;
 }

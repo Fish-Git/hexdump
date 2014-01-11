@@ -14,4 +14,7 @@ typedef   signed __int64 S64;
 typedef unsigned __int64 U64;
 
 typedef U8 BYTE;
+
+#ifndef __cplusplus
 typedef U8 bool;
+#endif

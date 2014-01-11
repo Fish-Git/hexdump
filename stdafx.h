@@ -11,11 +11,16 @@
 #include "typedefs.h"   // (BYTE, U32, U64, etc)
 
 #ifndef TRUE
-#define TRUE  1
+#define TRUE 1
 #endif
 
 #ifndef FALSE
 #define FALSE 0
+#endif
+
+#ifndef __cplusplus
+#define true  1
+#define false 0
 #endif
 
 #ifndef INLINE
