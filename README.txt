@@ -65,7 +65,6 @@
 #include <ctype.h>      /* isgraph */
 #include <malloc.h>     /* malloc  */
 #include <string.h>     /* strlen  */
-#include <memory.h>     /* memcpy  */
 
 /*********************************************************************/
 /*                          HEXDUMP                                  */
