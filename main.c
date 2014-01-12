@@ -53,9 +53,9 @@ int main( int argc, char* argv[] )
     size_t      skp = 11;
 
     if (argc > 1)
-        hexdumpe32( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
+        hexdumpe( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
     else
-        hexdumpa32( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
+        hexdumpa( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
 
     printf("%s",buf?buf:"(hexdump error)");
     free( buf ); buf = NULL;
