@@ -38,27 +38,35 @@ static const BYTE testtab[16*16] =
  0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF,
 };
 
-int main( int argc, char* argv[] )
+static const char* pfx = "HEXDUMPE  ";
+static char*       buf = NULL;
+
+static const char* dat = testtab;
+static size_t      amt = sizeof( testtab );
+
+static size_t      bpg = 4;
+static size_t      gpl = 4;
+
+static U64         adr = 0x01234567ABC12300;
+static size_t      skp = 11;
+
+static void dotest( int argc )
 {
-    const char* pfx = "HEXDUMPE  ";
-    char*       buf = NULL;
-
-    const char* dat =         testtab;
-    size_t      amt = sizeof( testtab );
-
-    size_t      bpg = 4;
-    size_t      gpl = 4;
-
-    U64         adr = 0x01234567ABC12300;
-    size_t      skp = 11;
-
     if (argc > 1)
         hexdumpe( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
     else
         hexdumpa( pfx, &buf, dat, skp, amt, adr, bpg, gpl );
-
-    printf("%s",buf?buf:"(hexdump error)");
+    printf("%s\n",buf?buf:"(hexdump error)");
     free( buf ); buf = NULL;
+}
+
+int main( int argc, char* argv[] )
+{
+    dotest( argc );
+
+    for (amt=1; amt <= (3*(bpg*gpl)); ++amt)
+        for (skp=0; skp < (bpg*gpl); ++skp)
+            dotest( argc );
 
     return 0;
 }
