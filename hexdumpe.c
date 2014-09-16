@@ -223,7 +223,7 @@ void _hexlinex( BYTE *buf, const BYTE *dat, size_t skp, size_t amt,
             s--;
         } else {
             c = x2x[ dat[i-skp] ];
-            if (isspace(c) || isgraph(c))
+            if (' ' == c || isgraph(c))
                 buf[n+i] = c;
             else
                 buf[n+i] = '.';
