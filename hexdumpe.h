@@ -180,7 +180,7 @@ static INLINE  char  e2a( char b )    { return e2atab()[ (unsigned char) b ]; }
 /*
 **              Translate an entire array of bytes
 */
-extern bool e2aora2e            /* Return true/false success/failure */
+extern U8 e2aora2e              /* Return true/false success/failure */
 (
           char    *out,         /* Resulting translated array        */
     const char    *in,          /* Array to be translated            */

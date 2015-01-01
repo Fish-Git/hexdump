@@ -83,7 +83,7 @@ _x2x_tab[16*16] = { /* dummy table to 'translate' to very same value */
 0xE0,0xE1,0xE2,0xE3,0xE4,0xE5,0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xEC,0xED,0xEE,0xEF,
 0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF,
 };
-bool e2aora2e                   /* Return true/false success/failure */
+U8 e2aora2e                     /* Return true/false success/failure */
 (
           char    *out,         /* Resulting translated array        */
     const char    *in,          /* Array to be translated            */
@@ -93,10 +93,10 @@ bool e2aora2e                   /* Return true/false success/failure */
 {
     size_t i;
     if (!out || !in || !len || !x2xtab)
-        return false;
+        return 0;
     for (i=0; i < len; i++)
         out[i] = x2xtab[(unsigned char) in[i]];
-    return true;
+    return 1;
 }
 
 /*********************************************************************/
