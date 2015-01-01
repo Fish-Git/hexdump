@@ -73,6 +73,10 @@
 /*********************************************************************/
 /*                          HEXDUMP                                  */
 /*********************************************************************/
+
+typedef
+void HEXDUMPE ( const char *pfx, char **buf, const char *dat, size_t skp,
+                size_t amt, U64 adr, int wid, size_t bpg, size_t gpl );
 extern
 void hexdumpaw( const char *pfx, char **buf, const char *dat, size_t skp,
                 size_t amt, U64 adr, int wid, size_t bpg, size_t gpl );
