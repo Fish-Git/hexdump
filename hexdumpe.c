@@ -64,7 +64,7 @@
 /*********************************************************************/
 /*                  EBCDIC/ASCII Translation                         */
 /*********************************************************************/
-static const BYTE
+static const char
 _x2x_tab[16*16] = { /* dummy table to 'translate' to very same value */
 0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,
 0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
@@ -85,17 +85,17 @@ _x2x_tab[16*16] = { /* dummy table to 'translate' to very same value */
 };
 bool e2aora2e                   /* Return true/false success/failure */
 (
-          BYTE    *out,         /* Resulting translated array        */
-    const BYTE    *in,          /* Array to be translated            */
+          char    *out,         /* Resulting translated array        */
+    const char    *in,          /* Array to be translated            */
     const size_t   len,         /* Length of each array in bytes     */
-    const BYTE    *x2xtab       /* Pointer to translation table      */
+    const char    *x2xtab       /* Pointer to translation table      */
 )
 {
     size_t i;
     if (!out || !in || !len || !x2xtab)
         return false;
     for (i=0; i < len; i++)
-        out[i] = x2xtab[in[i]];
+        out[i] = x2xtab[(unsigned char) in[i]];
     return true;
 }
 
@@ -103,14 +103,14 @@ bool e2aora2e                   /* Return true/false success/failure */
 /*                          HEXDUMP                                  */
 /*********************************************************************/
 static
-void _hexlinex( BYTE *buf, const BYTE *dat, size_t skp, size_t amt,
-                size_t bpg, size_t gpl, const BYTE* x2x );
+void _hexlinex( char *buf, const char *dat, size_t skp, size_t amt,
+                size_t bpg, size_t gpl, const char* x2x );
 static
-void _hexdumpxn( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
+void _hexdumpxn( const char *pfx, char **buf, const char *dat, size_t skp,
                  size_t amt, U64 adr, int hxd, size_t bpg, size_t gpl,
-                 const BYTE* x2x )
+                 const char* x2x )
 {
-    BYTE *p;
+    char *p;
     size_t n = strlen(pfx);
     size_t bpl = (bpg * gpl);
     size_t lbs = n + hxd + 2 + (bpl * 2) + gpl + 1 + bpl + 1;
@@ -119,7 +119,7 @@ void _hexdumpxn( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
         return;
     if (!(p = *buf)) {
         size_t lines = (skp + amt + bpl - 1) / bpl;
-        if (!(p = *buf = (BYTE*) malloc( (lines * lbs) + 1 )))
+        if (!(p = *buf = (char*) malloc( (lines * lbs) + 1 )))
             return;
     }
     for (; (skp+amt) >= bpl; adr+=bpl, p+=lbs) {
@@ -134,12 +134,12 @@ void _hexdumpxn( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
         _hexlinex( &p[n+hxd+2], dat, skp, amt, bpg, gpl, x2x );
     }
 }
-void hexdumpaw( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
+void hexdumpaw( const char *pfx, char **buf, const char *dat, size_t skp,
                 size_t amt, U64 adr, int bits, size_t bpg, size_t gpl )
 {
     _hexdumpxn( pfx, buf, dat, skp, amt, adr, (bits/4), bpg, gpl, _x2x_tab );
 }
-void hexdumpew( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
+void hexdumpew( const char *pfx, char **buf, const char *dat, size_t skp,
                 size_t amt, U64 adr, int bits, size_t bpg, size_t gpl )
 {
     _hexdumpxn( pfx, buf, dat, skp, amt, adr, (bits/4), bpg, gpl, e2atab() );
@@ -187,11 +187,11 @@ void hexdumpew( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
 
 ******************************************************************************/
 static
-void _hexlinex( BYTE *buf, const BYTE *dat, size_t skp, size_t amt,
-               size_t bpg, size_t gpl, const BYTE* x2x )
+void _hexlinex( char *buf, const char *dat, size_t skp, size_t amt,
+               size_t bpg, size_t gpl, const char* x2x )
 {
     size_t i, b, g, s, n;
-    register BYTE c;
+    register char c;
     if (!buf)
         return;
     if (!dat || !amt || !bpg || !gpl || skp >= (bpg * gpl)) {
@@ -222,8 +222,8 @@ void _hexlinex( BYTE *buf, const BYTE *dat, size_t skp, size_t amt,
             buf[n+i] = ' ';
             s--;
         } else {
-            c = x2x[ dat[i-skp] ];
-            if (' ' == c || isgraph(c))
+            c = x2x[ (unsigned char) dat[i-skp] ];
+            if (' ' == c || isgraph(c & 0xFF))
                 buf[n+i] = c;
             else
                 buf[n+i] = '.';

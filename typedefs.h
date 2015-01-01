@@ -1,20 +1,21 @@
 
-#pragma once
+#ifndef _TYPEDEFS_H_
+#define _TYPEDEFS_H_
 
-typedef   signed __int8  S8;
-typedef unsigned __int8  U8;
+typedef   signed char       S8;
+typedef unsigned char       U8;
 
-typedef   signed __int16 S16;
-typedef unsigned __int16 U16;
+typedef   signed short      S16;
+typedef unsigned short      U16;
 
-typedef   signed __int32 S32;
-typedef unsigned __int32 U32;
+typedef   signed int        S32;
+typedef unsigned int        U32;
 
-typedef   signed __int64 S64;
-typedef unsigned __int64 U64;
-
-typedef U8 BYTE;
+typedef   signed long long  S64;
+typedef unsigned long long  U64;
 
 #ifndef __cplusplus
-typedef U8 bool;
+typedef unsigned char       bool;
 #endif
+
+#endif // _TYPEDEFS_H_

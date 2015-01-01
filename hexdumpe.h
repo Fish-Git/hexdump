@@ -63,17 +63,21 @@
 
 #include <stdio.h>      /* sprintf */
 #include <ctype.h>      /* isgraph */
+#ifdef _MSC_VER
 #include <malloc.h>     /* malloc  */
+#else
+#include <stdlib.h>     /* malloc  */
+#endif
 #include <string.h>     /* strlen  */
 
 /*********************************************************************/
 /*                          HEXDUMP                                  */
 /*********************************************************************/
 extern
-void hexdumpaw( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
+void hexdumpaw( const char *pfx, char **buf, const char *dat, size_t skp,
                 size_t amt, U64 adr, int wid, size_t bpg, size_t gpl );
 extern
-void hexdumpew( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
+void hexdumpew( const char *pfx, char **buf, const char *dat, size_t skp,
                 size_t amt, U64 adr, int wid, size_t bpg, size_t gpl );
 
 #define hexdumpe16( pfx, buf, dat, skp, amt, adr,     bpg, gpl )  \
@@ -119,7 +123,7 @@ void hexdumpew( const char *pfx, BYTE **buf, const BYTE *dat, size_t skp,
 /*********************************************************************/
 /*               EBCDIC/ASCII Translation Tables                     */
 /*********************************************************************/
-static const BYTE
+static const char
 _a2e_tab[] = { /* ASCII code page 1252 to EBCDIC code page 1140 */
 /*      x0   x1   x2   x3   x4   x5   x6   x7   x8   x9   xA   xB   xC   xD   xE   xF*/
 /*0x*/0x00,0x01,0x02,0x03,0x37,0x2D,0x2E,0x2F,0x16,0x05,0x25,0x0B,0x0C,0x0D,0x0E,0x0F,
@@ -139,7 +143,7 @@ _a2e_tab[] = { /* ASCII code page 1252 to EBCDIC code page 1140 */
 /*Ex*/0x44,0x45,0x42,0x46,0x43,0x47,0x9C,0x48,0x54,0x51,0x52,0x53,0x58,0x55,0x56,0x57,
 /*Fx*/0x8C,0x49,0xCD,0xCE,0xCB,0xCF,0xCC,0xE1,0x70,0xDD,0xDE,0xDB,0xDC,0x8D,0x8E,0xDF,
 };/*    x0   x1   x2   x3   x4   x5   x6   x7   x8   x9   xA   xB   xC   xD   xE   xF*/
-static const BYTE
+static const char
 _e2a_tab[] = { /* EBCDIC code page 1140 to ASCII code page 1252 */
 /*      x0   x1   x2   x3   x4   x5   x6   x7   x8   x9   xA   xB   xC   xD   xE   xF*/
 /*0x*/0x00,0x01,0x02,0x03,0x9C,0x09,0x86,0x7F,0x97,0x8D,0x8E,0x0B,0x0C,0x0D,0x0E,0x0F,
@@ -166,22 +170,22 @@ _e2a_tab[] = { /* EBCDIC code page 1140 to ASCII code page 1252 */
 /*
 **              Get pointer to translation table
 */
-static INLINE  const BYTE*  a2etab()    { return _a2e_tab; }
-static INLINE  const BYTE*  e2atab()    { return _e2a_tab; }
+static INLINE  const char*  a2etab()    { return _a2e_tab; }
+static INLINE  const char*  e2atab()    { return _e2a_tab; }
 /*
 **                  Translate single byte
 */
-static INLINE  BYTE  a2e( BYTE b )    { return a2etab()[ b ]; }
-static INLINE  BYTE  e2a( BYTE b )    { return e2atab()[ b ]; }
+static INLINE  char  a2e( char b )    { return a2etab()[ (unsigned char) b ]; }
+static INLINE  char  e2a( char b )    { return e2atab()[ (unsigned char) b ]; }
 /*
 **              Translate an entire array of bytes
 */
 extern bool e2aora2e            /* Return true/false success/failure */
 (
-          BYTE    *out,         /* Resulting translated array        */
-    const BYTE    *in,          /* Array to be translated            */
+          char    *out,         /* Resulting translated array        */
+    const char    *in,          /* Array to be translated            */
     const size_t   len,         /* Length of each array in bytes     */
-    const BYTE    *x2xtab       /* Pointer to translation table      */
+    const char    *x2xtab       /* Pointer to translation table      */
 );
 
 #endif // _HEXDUMP_H_
