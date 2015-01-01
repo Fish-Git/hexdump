@@ -6,7 +6,7 @@
 
    COPYRIGHT        (C) 2014 Software Development Laboratories
 
-   VERSION          1.1     (16 Sep 2014)
+   VERSION          1.2     (31 Dec 2014)
 
    DESCRIPTION      Format a hex dump into the buffer provided
 
@@ -153,7 +153,7 @@ void hexdumpew( const char *pfx, char **buf, const char *dat, size_t skp,
 
    COPYRIGHT        (C) 2014 Software Development Laboratories
 
-   VERSION          1.1     (16 Sep 2014)
+   VERSION          1.2     (31 Dec 2014)
 
    DESCRIPTION      hexdump helper to format a single dump line
 
