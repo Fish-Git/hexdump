@@ -4,7 +4,7 @@
 
    AUTHOR           "Fish" (David B. Trout)
 
-   COPYRIGHT        (C) 2014 Software Development Laboratories
+   COPYRIGHT        (C) Software Development Laboratories
 
    VERSION          1.2     (31 Dec 2014)
 
@@ -30,11 +30,11 @@
 
      hexdumpaw and hexdumpew are normally not called directly but
      are instead called via one of the defined hexdumpxnn macros
-     where x is either a or e for ascii or ebcdic and nn is the
+     where x is either a or e for ASCII or EBCDIC and nn is the
      width of the cosmetic adr value in bits. Thus the hexdumpa32
-     macro will format an ascii dump using 8 hex digit (32-bit)
+     macro will format an ASCII dump using 8 hex digit (32-bit)
      wide adr values whereas the hexdumpe64 macro will format an
-     ebcdic dump using 64-bit (16 hex digit) wide adr values. The
+     EBCDIC dump using 64-bit (16 hex digit) wide adr values. The
      parameters passed to the macro are identical other than the
      missing wid parameter which is implied by the macro's name.
 
@@ -70,9 +70,9 @@
 #endif
 #include <string.h>     /* strlen  */
 
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 /*                          HEXDUMP                                  */
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 
 typedef
 void HEXDUMPE ( const char *pfx, char **buf, const char *dat, size_t skp,
@@ -124,9 +124,9 @@ void hexdumpew( const char *pfx, char **buf, const char *dat, size_t skp,
 #define hexdumpe    hexdumpe32      /* Default to 32-bit */
 #define hexdump     hexdumpa        /* Default to ASCII  */
 
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 /*               EBCDIC/ASCII Translation Tables                     */
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 static const char
 _a2e_tab[] = { /* ASCII code page 1252 to EBCDIC code page 1140 */
 /*      x0   x1   x2   x3   x4   x5   x6   x7   x8   x9   xA   xB   xC   xD   xE   xF*/
@@ -168,9 +168,9 @@ _e2a_tab[] = { /* EBCDIC code page 1140 to ASCII code page 1252 */
 /*Fx*/0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0xB3,0xDB,0xDC,0xD9,0xDA,0x9F,
 };/*    x0   x1   x2   x3   x4   x5   x6   x7   x8   x9   xA   xB   xC   xD   xE   xF*/
 
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 /*              EBCDIC/ASCII Translation Functions                   */
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 /*
 **              Get pointer to translation table
 */

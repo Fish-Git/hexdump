@@ -34,4 +34,10 @@
 #endif
 #endif
 
+#if defined( _MSC_VER ) && !defined( W32_PUSH_WARNINGS )
+#define W32_PUSH_WARNINGS()     __pragma( warning( push ))
+#define W32_DISABLE_4996()      __pragma( warning( disable : 4996 )) // "This function or variable may be unsafe."
+#define W32_POP_WARNINGS()      __pragma( warning( pop ))
+#endif // _MSC_VER
+
 #endif // _STDAFX_H_

@@ -4,7 +4,7 @@
 
    AUTHOR           "Fish" (David B. Trout)
 
-   COPYRIGHT        (C) 2014 Software Development Laboratories
+   COPYRIGHT        (C) Software Development Laboratories
 
    VERSION          1.2     (31 Dec 2014)
 
@@ -30,11 +30,11 @@
 
      hexdumpaw and hexdumpew are normally not called directly but
      are instead called via one of the defined hexdumpxnn macros
-     where x is either a or e for ascii or ebcdic and nn is the
+     where x is either a or e for ASCII or EBCDIC and nn is the
      width of the cosmetic adr value in bits. Thus the hexdumpa32
-     macro will format an ascii dump using 8 hex digit (32-bit)
+     macro will format an ASCII dump using 8 hex digit (32-bit)
      wide adr values whereas the hexdumpe64 macro will format an
-     ebcdic dump using 64-bit (16 hex digit) wide adr values. The
+     EBCDIC dump using 64-bit (16 hex digit) wide adr values. The
      parameters passed to the macro are identical other than the
      missing wid parameter which is implied by the macro's name.
 
@@ -61,9 +61,9 @@
 #include "stdafx.h"
 #include "hexdumpe.h"
 
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 /*                  EBCDIC/ASCII Translation                         */
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 static const char
 _x2x_tab[16*16] = { /* dummy table to 'translate' to very same value */
 0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,
@@ -99,9 +99,9 @@ U8 e2aora2e                     /* Return true/false success/failure */
     return 1;
 }
 
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 /*                          HEXDUMP                                  */
-/*********************************************************************/
+/*-------------------------------------------------------------------*/
 static
 void _hexlinex( char *buf, const char *dat, size_t skp, size_t amt,
                 size_t bpg, size_t gpl, const char* x2x );
@@ -122,17 +122,22 @@ void _hexdumpxn( const char *pfx, char **buf, const char *dat, size_t skp,
         if (!(p = *buf = (char*) malloc( (lines * lbs) + 1 )))
             return;
     }
-    for (; (skp+amt) >= bpl; adr+=bpl, p+=lbs) {
-        sprintf( &p[0], "%s%0*llX  ", pfx, hxd, adr );
-        _hexlinex( &p[n+hxd+2], dat, skp, (bpl-skp), bpg, gpl, x2x );
-        dat += (bpl - skp);
-        amt -= (bpl - skp);
-        skp = 0;
+    W32_PUSH_WARNINGS();
+    W32_DISABLE_4996();
+    {
+        for (; (skp+amt) >= bpl; adr+=bpl, p+=lbs) {
+            sprintf( &p[0], "%s%0*llX  ", pfx, hxd, adr );
+            _hexlinex( &p[n+hxd+2], dat, skp, (bpl-skp), bpg, gpl, x2x );
+            dat += (bpl - skp);
+            amt -= (bpl - skp);
+            skp = 0;
+        }
+        if (amt) {
+            sprintf( &p[0], "%s%0*llX  ", pfx, hxd, adr );
+            _hexlinex( &p[n+hxd+2], dat, skp, amt, bpg, gpl, x2x );
+        }
     }
-    if (amt) {
-        sprintf( &p[0], "%s%0*llX  ", pfx, hxd, adr );
-        _hexlinex( &p[n+hxd+2], dat, skp, amt, bpg, gpl, x2x );
-    }
+    W32_POP_WARNINGS();
 }
 void hexdumpaw( const char *pfx, char **buf, const char *dat, size_t skp,
                 size_t amt, U64 adr, int bits, size_t bpg, size_t gpl )
@@ -151,7 +156,7 @@ void hexdumpew( const char *pfx, char **buf, const char *dat, size_t skp,
 
    AUTHOR           "Fish" (David B. Trout)
 
-   COPYRIGHT        (C) 2014 Software Development Laboratories
+   COPYRIGHT        (C) Software Development Laboratories
 
    VERSION          1.2     (31 Dec 2014)
 
@@ -200,21 +205,26 @@ void _hexlinex( char *buf, const char *dat, size_t skp, size_t amt,
     }
     if ((skp + amt) > (bpg * gpl))
         amt = (bpg * gpl) - skp;
-    for (i=g=0, s=skp; g < gpl; g++) {
-        for (b=0; b < bpg; b++, i++) {
+    W32_PUSH_WARNINGS();
+    W32_DISABLE_4996();
+    {
+        for (i=g=0, s=skp; g < gpl; g++) {
+            for (b=0; b < bpg; b++, i++) {
+                n = ((g*(bpg*2))+g+(b*2));
+                if (s || (i-skp) >= amt) {
+                    sprintf( &buf[n],
+                        "  " );
+                    if (s)
+                        s--;
+                } else
+                    sprintf(&buf[n],
+                        "%02X", dat[i-skp] & 0xff );
+            }
             n = ((g*(bpg*2))+g+(b*2));
-            if (s || (i-skp) >= amt) {
-                sprintf( &buf[n],
-                    "  " );
-                if (s)
-                    s--;
-            } else
-                sprintf(&buf[n],
-                    "%02X", dat[i-skp] & 0xff );
+            sprintf( &buf[((g*(bpg*2))+g+(b*2))], " " );
         }
-        n = ((g*(bpg*2))+g+(b*2));
-        sprintf( &buf[((g*(bpg*2))+g+(b*2))], " " );
     }
+    W32_POP_WARNINGS();
     n = (bpg*gpl*2)+gpl;
     buf[n] = ' ';
     for (i=0, s=skp, n++; i < (skp+amt); i++) {
